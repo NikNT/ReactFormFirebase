@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import "./App.css";
 import { useState } from "react";
+import { firestore } from "./firebase";
 
 function App() {
   const [name, setName] = useState("");
@@ -13,6 +14,18 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(name, email, message);
+
+    firestore
+      .collection("messages")
+      .add({
+        name,
+        email,
+        message,
+      })
+      .then(() => {
+        setName(""), setEmail(""), setMessage("");
+      })
+      .catch((error) => console.error("Error submitting data: ", error));
   };
 
   return (
